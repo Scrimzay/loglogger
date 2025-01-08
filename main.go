@@ -30,8 +30,21 @@ func New(filename string) (*Logger, error) {
 		return nil, fmt.Errorf("Failed to get working directory: %v", err)
 	}
 
+	logsDir := filepath.Join(wd, "logs")
+	if err := os.MkdirAll(logsDir, 0755); err != nil {
+		return nil, fmt.Errorf("Error creating logs directory: %v", err)
+	}
+
+	// Create date-based directory
+	currentTime := time.Now()
+	dateDir := currentTime.Format("2006-01-02") // YYYY-MM-DD
+	datePath := filepath.Join(logsDir, dateDir)
+	if err := os.MkdirAll(datePath, 0755); err != nil {
+		return nil, fmt.Errorf("Failed to create date directory: %v", err)
+	}
+
 	// create full filepath
-	fullPath := filepath.Join(wd, filename)
+	fullPath := filepath.Join(datePath, filename)
 
 	// open log file with append mode, create if doesnt exist
 	file, err := os.OpenFile(fullPath, os.O_APPEND|os.O_CREATE|os.O_WRONLY, 0644)
@@ -121,4 +134,23 @@ func (*Logger) Sprint(v ...interface{}) string {
 // formats according to a format specifier and returns the string
 func (l *Logger) Sprintf(format string, v ...interface{}) string {
 	return fmt.Sprintf(format, v...)
+}
+
+// logs an error message
+func (l *Logger) Error(v ...interface{}) {
+	l.mu.Lock()
+	defer l.mu.Unlock()
+
+	msg := formatLog("[ERROR] %v", v...)
+	l.logger.Print(msg)
+	fmt.Println(msg)
+}
+
+func (l *Logger) Errorf(format string, v ...interface{}) {
+	l.mu.Lock()
+	defer l.mu.Unlock()
+
+	msg := formatLog("[ERROR] %v"+format, v...)
+	l.logger.Print(msg)
+	fmt.Println(msg)
 }
