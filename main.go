@@ -146,11 +146,11 @@ func (l *Logger) Error(v ...interface{}) {
 	fmt.Println(msg)
 }
 
+// logs a formatted error message
 func (l *Logger) Errorf(format string, v ...interface{}) {
 	l.mu.Lock()
 	defer l.mu.Unlock()
 
-	//userMsg := fmt.Sprintf(format, v...)
 	msg := formatLog(format, v...)
 	l.logger.Print(msg)
 	fmt.Println(msg)
