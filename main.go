@@ -150,8 +150,8 @@ func (l *Logger) Errorf(format string, v ...interface{}) {
 	l.mu.Lock()
 	defer l.mu.Unlock()
 
-	userMsg := fmt.Sprintf(format, v...)
-	msg := formatLog("[ERROR] %s", userMsg)
+	//userMsg := fmt.Sprintf(format, v...)
+	msg := formatLog(format, v...)
 	l.logger.Print(msg)
 	fmt.Println(msg)
 }
