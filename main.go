@@ -127,7 +127,7 @@ func (l *Logger) Fatalf(format string, v ...interface{}) {
 }
 
 // formats using the default formats for its operands and returns the string
-func (*Logger) Sprint(v ...interface{}) string {
+func (l *Logger) Sprint(v ...interface{}) string {
 	return fmt.Sprint(v...)
 }
 
@@ -150,7 +150,8 @@ func (l *Logger) Errorf(format string, v ...interface{}) {
 	l.mu.Lock()
 	defer l.mu.Unlock()
 
-	msg := formatLog("[ERROR] %v"+format, v...)
+	userMsg := fmt.Sprintf(format, v...)
+	msg := formatLog("[ERROR] %s", userMsg)
 	l.logger.Print(msg)
 	fmt.Println(msg)
 }
