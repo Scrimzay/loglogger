@@ -7,8 +7,6 @@ package main
 
 import (
 	"github.com/Scrimzay/loglogger"
-	"path/filepath"
-	"os"
 )
 
 func main() {
