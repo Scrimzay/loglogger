@@ -9,12 +9,24 @@ import (
 	"github.com/Scrimzay/loglogger"
 )
 
+// Global example
+var log *logger.Logger
+
+func init() {
+  var err error
+  log, err = logger.New("example.txt")
+  if err != nil {
+    log.Fatalf("Could not start new logger: %v", err)
+  }
+}
+
 func main() {
-	log, err := logger.New("details.log")
+  // local example
+	/*log, err := logger.New("details.log")
 	if err != nil {
 		panic(err)
 	}
-	defer log.Close()
+	defer log.Close()*/
 
 	// basic logger usage
 	log.Print("***Program starting***")
